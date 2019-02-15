@@ -6,6 +6,7 @@ import os
 from splinter import Browser
 
 
+
 class Color:
     # Use colors to make command line output prettier
     RED = '\033[91m'
@@ -29,7 +30,7 @@ class Shuriken:
         self.user_args = self.parse_args()
 
         # PhantomJS browser 
-        self.browser = Browser("phantomjs")
+        self.browser = Browser('chrome', headless=True)
 
     def make_sure_path_exists(self, path):
         try:
@@ -44,7 +45,14 @@ class Shuriken:
 
         # Let user specify where in the URL fuzz values should be injected
         injected_link = link.replace("{xss}", payload)
+
         browser.visit(injected_link)
+        try:
+            alert = browser.get_alert()
+            alert.dismiss()
+        except:
+            pass        
+        
 
         # Keep index of screens, so they can be easily
         # linked to line nums in log
